@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_clean_architecture/features/number_trivia/data/models/number_trivia_model.dart';
+import '../models/number_trivia_model.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/exceptions.dart';

@@ -2,22 +2,16 @@
 // in flutter_clean_architecture/test/features/number_trivia/domain/repositories/number_trivia_repository_impl_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i7;
+import 'dart:async' as _i4;
 
-import 'package:dartz/dartz.dart' as _i6;
-import 'package:flutter_clean_architecture/core/error/failures.dart' as _i9;
 import 'package:flutter_clean_architecture/core/network/network_info.dart'
-    as _i5;
-import 'package:flutter_clean_architecture/features/number_trivia/data/datasources/number_trivia_local_data_source.dart'
-    as _i4;
-import 'package:flutter_clean_architecture/features/number_trivia/data/datasources/number_trivia_remote_data_source.dart'
     as _i3;
+import 'package:flutter_clean_architecture/features/number_trivia/data/datasources/number_trivia_local_data_source.dart'
+    as _i6;
+import 'package:flutter_clean_architecture/features/number_trivia/data/datasources/number_trivia_remote_data_source.dart'
+    as _i5;
 import 'package:flutter_clean_architecture/features/number_trivia/data/models/number_trivia_model.dart'
     as _i2;
-import 'package:flutter_clean_architecture/features/number_trivia/data/repositories/number_trivia_repository_impl.dart'
-    as _i8;
-import 'package:flutter_clean_architecture/features/number_trivia/domain/entities/number_trivia.dart'
-    as _i10;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -31,28 +25,18 @@ import 'package:mockito/mockito.dart' as _i1;
 class _FakeNumberTriviaModel_0 extends _i1.Fake
     implements _i2.NumberTriviaModel {}
 
-class _FakeNumberTriviaRemoteDataSource_1 extends _i1.Fake
-    implements _i3.NumberTriviaRemoteDataSource {}
-
-class _FakeNumberTriviaLocalDataSource_2 extends _i1.Fake
-    implements _i4.NumberTriviaLocalDataSource {}
-
-class _FakeNetworkInfo_3 extends _i1.Fake implements _i5.NetworkInfo {}
-
-class _FakeEither_4<L, R> extends _i1.Fake implements _i6.Either<L, R> {}
-
 /// A class which mocks [NetworkInfo].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNetworkInfo extends _i1.Mock implements _i5.NetworkInfo {
+class MockNetworkInfo extends _i1.Mock implements _i3.NetworkInfo {
   MockNetworkInfo() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<bool> get isConnected =>
+  _i4.Future<bool> get isConnected =>
       (super.noSuchMethod(Invocation.getter(#isConnected),
-          returnValue: Future<bool>.value(false)) as _i7.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i4.Future<bool>);
   @override
   String toString() => super.toString();
 }
@@ -61,23 +45,23 @@ class MockNetworkInfo extends _i1.Mock implements _i5.NetworkInfo {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockNumberTriviaRemoteDataSource extends _i1.Mock
-    implements _i3.NumberTriviaRemoteDataSource {
+    implements _i5.NumberTriviaRemoteDataSource {
   MockNumberTriviaRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i2.NumberTriviaModel> getConcreteNumberTrivia(int? number) =>
+  _i4.Future<_i2.NumberTriviaModel> getConcreteNumberTrivia(int? number) =>
       (super.noSuchMethod(Invocation.method(#getConcreteNumberTrivia, [number]),
               returnValue: Future<_i2.NumberTriviaModel>.value(
                   _FakeNumberTriviaModel_0()))
-          as _i7.Future<_i2.NumberTriviaModel>);
+          as _i4.Future<_i2.NumberTriviaModel>);
   @override
-  _i7.Future<_i2.NumberTriviaModel> getRandomNumberTrivia() =>
+  _i4.Future<_i2.NumberTriviaModel> getRandomNumberTrivia() =>
       (super.noSuchMethod(Invocation.method(#getRandomNumberTrivia, []),
               returnValue: Future<_i2.NumberTriviaModel>.value(
                   _FakeNumberTriviaModel_0()))
-          as _i7.Future<_i2.NumberTriviaModel>);
+          as _i4.Future<_i2.NumberTriviaModel>);
   @override
   String toString() => super.toString();
 }
@@ -86,64 +70,23 @@ class MockNumberTriviaRemoteDataSource extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockNumberTriviaLocalDataSource extends _i1.Mock
-    implements _i4.NumberTriviaLocalDataSource {
+    implements _i6.NumberTriviaLocalDataSource {
   MockNumberTriviaLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i2.NumberTriviaModel> getLastNumberTrivia() =>
+  _i4.Future<_i2.NumberTriviaModel> getLastNumberTrivia() =>
       (super.noSuchMethod(Invocation.method(#getLastNumberTrivia, []),
               returnValue: Future<_i2.NumberTriviaModel>.value(
                   _FakeNumberTriviaModel_0()))
-          as _i7.Future<_i2.NumberTriviaModel>);
+          as _i4.Future<_i2.NumberTriviaModel>);
   @override
-  _i7.Future<void> cacheNumberTrivia(_i2.NumberTriviaModel? triviaToCache) =>
+  _i4.Future<void> cacheNumberTrivia(_i2.NumberTriviaModel? triviaToCache) =>
       (super.noSuchMethod(
           Invocation.method(#cacheNumberTrivia, [triviaToCache]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i7.Future<void>);
-  @override
-  String toString() => super.toString();
-}
-
-/// A class which mocks [NumberTriviaRepositoryImpl].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockNumberTriviaRepositoryImpl extends _i1.Mock
-    implements _i8.NumberTriviaRepositoryImpl {
-  MockNumberTriviaRepositoryImpl() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i3.NumberTriviaRemoteDataSource get remoteDataSource =>
-      (super.noSuchMethod(Invocation.getter(#remoteDataSource),
-              returnValue: _FakeNumberTriviaRemoteDataSource_1())
-          as _i3.NumberTriviaRemoteDataSource);
-  @override
-  _i4.NumberTriviaLocalDataSource get localDataSource =>
-      (super.noSuchMethod(Invocation.getter(#localDataSource),
-              returnValue: _FakeNumberTriviaLocalDataSource_2())
-          as _i4.NumberTriviaLocalDataSource);
-  @override
-  _i5.NetworkInfo get networkInfo =>
-      (super.noSuchMethod(Invocation.getter(#networkInfo),
-          returnValue: _FakeNetworkInfo_3()) as _i5.NetworkInfo);
-  @override
-  _i7.Future<_i6.Either<_i9.Failure, _i10.NumberTrivia>>
-      getConcreteNumberTrivia(int? number) => (super.noSuchMethod(
-          Invocation.method(#getConcreteNumberTrivia, [number]),
-          returnValue: Future<_i6.Either<_i9.Failure, _i10.NumberTrivia>>.value(
-              _FakeEither_4<_i9.Failure, _i10.NumberTrivia>())) as _i7
-          .Future<_i6.Either<_i9.Failure, _i10.NumberTrivia>>);
-  @override
-  _i7.Future<_i6.Either<_i9.Failure, _i10.NumberTrivia>>
-      getRandomNumberTrivia() => (super.noSuchMethod(
-          Invocation.method(#getRandomNumberTrivia, []),
-          returnValue: Future<_i6.Either<_i9.Failure, _i10.NumberTrivia>>.value(
-              _FakeEither_4<_i9.Failure, _i10.NumberTrivia>())) as _i7
-          .Future<_i6.Either<_i9.Failure, _i10.NumberTrivia>>);
+          returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
   @override
   String toString() => super.toString();
 }
