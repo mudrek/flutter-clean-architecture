@@ -38,7 +38,12 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         (failure) async* {
           yield Error(message: INVALID_INPUT_FAILURE_MESSAGE);
         },
-        (integer) => throw UnimplementedError(),
+        (integer) async* {
+          yield Loading();
+          final failureOrTrivia = await concrete(Params(number: integer));
+          yield failureOrTrivia.fold((failure) => throw UnimplementedError(),
+              (trivia) => Loaded(trivia: trivia));
+        },
       );
     }
   }
