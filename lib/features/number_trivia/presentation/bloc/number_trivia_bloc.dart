@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_clean_architecture/core/error/failures.dart';
 import '../../../../core/util/input_converter.dart';
 import '../../domain/entities/number_trivia.dart';
 import '../../domain/usecases/get_concrete_number_trivia.dart';
@@ -24,27 +25,28 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
     required this.concrete,
     required this.random,
     required this.inputConverter,
-  }) : super(Empty());
+  }) : super(Empty()) {
+    on<GetTriviaForConcreteNumber>(eventGetTriviaForConcreteNumber);
+  }
 
-  @override
-  Stream<NumberTriviaState> mapEventToState(
-    NumberTriviaEvent event,
-  ) async* {
-    if (event is GetTriviaForConcreteNumber) {
-      final inputEither =
-          inputConverter.stringToUnsignedInt(event.numberString);
+  FutureOr<void> eventGetTriviaForConcreteNumber(
+      GetTriviaForConcreteNumber event, Emitter<NumberTriviaState> emit) {
+    final inputEither = inputConverter.stringToUnsignedInt(event.numberString);
 
-      yield* inputEither.fold(
-        (failure) async* {
-          yield Error(message: INVALID_INPUT_FAILURE_MESSAGE);
-        },
-        (integer) async* {
-          yield Loading();
-          final failureOrTrivia = await concrete(Params(number: integer));
-          yield failureOrTrivia.fold((failure) => throw UnimplementedError(),
-              (trivia) => Loaded(trivia: trivia));
-        },
-      );
-    }
+    inputEither
+        .fold((failure) => emit(Error(message: INVALID_INPUT_FAILURE_MESSAGE)),
+            (integer) async {
+      emit(Loading());
+      final failureOrTrivia = await concrete(Params(number: integer));
+      failureOrTrivia.fold(
+          (failure) => emit(
+                Error(
+                  message: failure is ServerFailure
+                      ? SERVER_FAILURE_MESSAGE
+                      : CACHE_FAILURE_MESSAGE,
+                ),
+              ),
+          (trivia) => emit(Loaded(trivia: trivia)));
+    });
   }
 }

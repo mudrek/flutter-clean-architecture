@@ -1,3 +1,4 @@
+import 'package:flutter_clean_architecture/core/error/failures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
@@ -95,18 +96,53 @@ void main() {
       },
     );
 
-    blocTest('should emit [Loading, Loaded] when data is gotten successfully',
-        build: () => bloc,
-        setUp: () {
-          setUpMockInputConverterSuccess();
-          setUpmockGetConcreteNumberTrivia();
-        },
-        expect: () => [
-          Loading(),
-          Loaded(trivia: tNumberTrivia),
-        ],
-        act: (NumberTriviaBloc bloc) {
-          bloc.add(GetTriviaForConcreteNumber(tNumberString));
-        });
+    blocTest(
+      'should emit [Loading, Loaded] when data is gotten successfully',
+      build: () => bloc,
+      setUp: () {
+        setUpMockInputConverterSuccess();
+        setUpmockGetConcreteNumberTrivia();
+      },
+      expect: () => [
+        Loading(),
+        Loaded(trivia: tNumberTrivia),
+      ],
+      act: (NumberTriviaBloc bloc) {
+        bloc.add(GetTriviaForConcreteNumber(tNumberString));
+      },
+    );
+    blocTest(
+      'should emit [Loading, Error] when getting data fails',
+      build: () => bloc,
+      setUp: () {
+        setUpMockInputConverterSuccess();
+        when(mockGetConcreteNumberTrivia(any))
+            .thenAnswer((_) async => Left(ServerFailure()));
+      },
+      expect: () => [
+        Loading(),
+        Error(message: SERVER_FAILURE_MESSAGE),
+      ],
+      act: (NumberTriviaBloc bloc) {
+        bloc.add(GetTriviaForConcreteNumber(tNumberString));
+      },
+    );
+
+    blocTest(
+      'should emit [Loading, Error] with a proper message for the error when getting data fails',
+      build: () => bloc,
+      setUp: () {
+        setUpMockInputConverterSuccess();
+        when(mockGetConcreteNumberTrivia(any))
+            .thenAnswer((_) async => Left(CacheFailure()));
+      },
+      act: (NumberTriviaBloc bloc) {
+        bloc.add(GetTriviaForConcreteNumber(tNumberString));
+      },
+      expect: () => [
+        Loading(),
+        Error(message: CACHE_FAILURE_MESSAGE),
+      ],
+    );
   });
 }
