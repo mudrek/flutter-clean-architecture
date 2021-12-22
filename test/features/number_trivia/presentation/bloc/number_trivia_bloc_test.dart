@@ -1,4 +1,5 @@
 import 'package:flutter_clean_architecture/core/error/failures.dart';
+import 'package:flutter_clean_architecture/core/usecases/usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
@@ -138,6 +139,72 @@ void main() {
       },
       act: (NumberTriviaBloc bloc) {
         bloc.add(GetTriviaForConcreteNumber(tNumberString));
+      },
+      expect: () => [
+        Loading(),
+        Error(message: CACHE_FAILURE_MESSAGE),
+      ],
+    );
+  });
+
+  group('GetTriviaForRandomNumber', () {
+    final tNumberTrivia = NumberTrivia(number: 1, text: 'test trivia');
+
+    void setUpMockGetRandomNumberTrivia() =>
+        when(mockGetRandomNumberTrivia(any))
+            .thenAnswer((_) async => Right(tNumberTrivia));
+
+    blocTest(
+      'should get data from the random use case',
+      build: () => bloc,
+      setUp: () {
+        setUpMockGetRandomNumberTrivia();
+      },
+      act: (NumberTriviaBloc bloc) => bloc.add(GetTriviaForRandomNumber()),
+      verify: (bloc) {
+        verify(mockGetRandomNumberTrivia(NoParams()));
+      },
+    );
+
+    blocTest(
+      'should emit [Loading, Loaded] when data is gotten successfully',
+      build: () => bloc,
+      setUp: () {
+        setUpMockGetRandomNumberTrivia();
+      },
+      expect: () => [
+        Loading(),
+        Loaded(trivia: tNumberTrivia),
+      ],
+      act: (NumberTriviaBloc bloc) {
+        bloc.add(GetTriviaForRandomNumber());
+      },
+    );
+    blocTest(
+      'should emit [Loading, Error] when getting data fails',
+      build: () => bloc,
+      setUp: () {
+        when(mockGetRandomNumberTrivia(any))
+            .thenAnswer((_) async => Left(ServerFailure()));
+      },
+      expect: () => [
+        Loading(),
+        Error(message: SERVER_FAILURE_MESSAGE),
+      ],
+      act: (NumberTriviaBloc bloc) {
+        bloc.add(GetTriviaForRandomNumber());
+      },
+    );
+
+    blocTest(
+      'should emit [Loading, Error] with a proper message for the error when getting data fails',
+      build: () => bloc,
+      setUp: () {
+        when(mockGetRandomNumberTrivia(any))
+            .thenAnswer((_) async => Left(CacheFailure()));
+      },
+      act: (NumberTriviaBloc bloc) {
+        bloc.add(GetTriviaForRandomNumber());
       },
       expect: () => [
         Loading(),
