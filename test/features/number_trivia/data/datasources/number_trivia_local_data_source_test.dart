@@ -1,25 +1,24 @@
 import 'dart:convert';
 
 import 'package:flutter_clean_architecture/core/error/exceptions.dart';
+import 'package:flutter_clean_architecture/core/plugins/prefs.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:matcher/matcher.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 import 'number_trivia_local_data_source_test.mocks.dart';
 
-
-@GenerateMocks([SharedPreferences])
+@GenerateMocks([SecureStoragePrefs])
 void main() {
   late NumberTriviaLocalDataSourceImpl dataSource;
-  late MockSharedPreferences mockSharedPreferences;
+  late MockSecureStoragePrefs mockSharedPreferences;
 
   setUp(() {
-    mockSharedPreferences = MockSharedPreferences();
+    mockSharedPreferences = MockSecureStoragePrefs();
     dataSource = NumberTriviaLocalDataSourceImpl(
       sharedPreferences: mockSharedPreferences,
     );
@@ -34,7 +33,7 @@ void main() {
       () async {
         // arrange
         when(mockSharedPreferences.getString(any))
-            .thenReturn(fixture('trivia_cached.json'));
+            .thenAnswer((_) async => fixture('trivia_cached.json'));
         // act
         final result = await dataSource.getLastNumberTrivia();
         // assert
@@ -47,7 +46,7 @@ void main() {
       'should throw a CacheExeption when there is not a cached value',
       () async {
         // arrange
-        when(mockSharedPreferences.getString(any)).thenReturn(null);
+        when(mockSharedPreferences.getString(any)).thenAnswer((_) async => "");
         // act
         final call = dataSource.getLastNumberTrivia;
         // assert
@@ -64,7 +63,8 @@ void main() {
       'should call SharedPreferences to cache the data',
       () async {
         // arrange
-        when(mockSharedPreferences.setString(any, any)).thenAnswer((_) async => true);
+        when(mockSharedPreferences.setString(any, any))
+            .thenAnswer((_) async => true);
         // act
         dataSource.cacheNumberTrivia(tNumberTriviaModel);
         // assert

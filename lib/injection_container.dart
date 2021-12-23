@@ -1,8 +1,10 @@
 import 'package:flutter_clean_architecture/core/network/network_info.dart';
+import 'package:flutter_clean_architecture/core/plugins/prefs.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/data/datasources/number_trivia_remote_data_source.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/data/repositories/number_trivia_repository_impl.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/domain/repositories/number_trivia_repository.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,7 +62,7 @@ init() async {
   );
 
   //! External
-  sl.registerLazySingletonAsync<SharedPreferences>(() => SharedPreferences.getInstance());
+  sl.registerSingleton<Prefs>(SecureStoragePrefs(FlutterSecureStorage()));
 
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => InternetConnectionChecker());

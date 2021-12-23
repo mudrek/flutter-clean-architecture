@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/presentation/bloc/number_trivia_bloc.dart';
+import 'package:flutter_clean_architecture/features/number_trivia/presentation/widgets/widgets.dart';
 
 import '../../../../injection_container.dart';
 
@@ -13,7 +14,9 @@ class NumberTriviaPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Number Trivia'),
       ),
-      body: _body(context),
+      body: SingleChildScrollView(
+        child: _body(context),
+      ),
     );
   }
 
@@ -29,48 +32,35 @@ class NumberTriviaPage extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              _test(),
+              BlocBuilder<NumberTriviaBloc, NumberTriviaState>(
+                builder: (context, state) {
+                  if (state is Empty) {
+                    return MessageDisplay(
+                      message: "Start searching!",
+                    );
+                  } else if (state is Error) {
+                    return MessageDisplay(
+                      message: state.message,
+                    );
+                  } else if (state is Loading) {
+                    return LoadingWidget();
+                  } else if (state is Loaded) {
+                    return TriviaDisplay(numberTrivia: state.trivia);
+                  }
+                  return Container(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: Placeholder(),
+                  );
+                },
+              ),
               SizedBox(
                 height: 20,
               ),
-              Column(
-                children: [
-                  Placeholder(
-                    fallbackHeight: 40,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Placeholder(fallbackHeight: 30),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Placeholder(fallbackHeight: 30),
-                      ),
-                    ],
-                  )
-                ],
-              )
+              TriviaControls()
             ],
           ),
         ),
       ),
-    );
-  }
-
-  _test() {
-    return BlocBuilder<NumberTriviaBloc, NumberTriviaState>(
-      builder: (context, state) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.3,
-          child: Placeholder(),
-        );
-      },
     );
   }
 }

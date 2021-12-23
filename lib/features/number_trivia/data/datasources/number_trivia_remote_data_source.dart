@@ -32,7 +32,7 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
 
   Future<NumberTriviaModel> _getTriviaFromUrl(String url) async {
     final response = await client.get(
-      Uri(path: url),
+      Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
       },
