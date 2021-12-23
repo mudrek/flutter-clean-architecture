@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 
 final sl = GetIt.instance;
 
-init() {
+init() async {
   //! Features
   // Bloc
   sl.registerFactory(
@@ -60,8 +60,8 @@ init() {
   );
 
   //! External
-  sl.registerLazySingletonAsync(
-      () async => await SharedPreferences.getInstance());
+  sl.registerLazySingletonAsync<SharedPreferences>(() => SharedPreferences.getInstance());
+
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => InternetConnectionChecker());
 }
